@@ -6,6 +6,7 @@ import Technologies from "./Technologies";
 const App = () => {
     return (
         <div>
+            test
             <Header/>
             <Technologies />
         </div>
