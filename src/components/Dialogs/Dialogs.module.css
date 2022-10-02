@@ -12,9 +12,10 @@
     padding: 10px;
 }
 
-.message {
-
+.messages .message {
+    color: white;
 }
 .dialogsItems {
     padding: 10px;
+    color: white;
 }

@@ -1,8 +1,11 @@
 import React from "react";
 import s from "./MyPosts.module.css";
 import {Post} from "./Posts/Post";
+import {AppPropsType} from "../../../index";
 
-export const MyPosts = () => {
+export const MyPosts = (props: AppPropsType) => {
+    let postsElement = props.posts?.map(p=> <Post message={p.message} likesCount={p.likesCount}/>)
+
     return (
         <div className={s.postsBlock}>
             <h3>My post</h3>
@@ -14,8 +17,7 @@ export const MyPosts = () => {
                 </div>
             </div>
             <div className={s.posts}>
-                <Post message={"Hi, how are you?"} likeCount={15}/>
-                <Post message={"It's my first post"} likeCount={20}/>
+                {postsElement}
             </div>
         </div>
     )
