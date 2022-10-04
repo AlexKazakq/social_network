@@ -1,21 +1,22 @@
 import App from "../App";
+import {rerenderEntireTree} from "../render";
 
 export type StatePropsType = {
     state: AppPropsType
+    addPost: (postMessage: string) => void
 }
 
-export type ProfilePageType = {
-    posts: PostsType[]
-}
-
-export type MessagesPageType = {
-    messages: MessagesType[]
-    dialogs: DialogsType[]
-}
 
 export type AppPropsType = {
     profilePage : ProfilePageType
-   messagesPage: MessagesPageType
+   messagesPage: DialogPageType
+}
+export type ProfilePageType = {
+    posts: PostsType[]
+}
+export type DialogPageType = {
+    messages: MessagesType[]
+    dialogs: DialogsType[]
 }
 
 export type PostsType = {
@@ -23,7 +24,6 @@ export type PostsType = {
     message: string
     likesCount: number
 }
-
 export type DialogsType = {
     id: number
     name: string
@@ -34,7 +34,7 @@ export type MessagesType = {
 }
 
 export let state: AppPropsType = {
-    profilePage: {
+    profilePage:  {
         posts: [
             {id: 1, message: "Hi, how are you?", likesCount: 12},
             {id: 2, message: "It's my first post", likesCount: 10},
@@ -59,4 +59,14 @@ export let state: AppPropsType = {
             {id: 5, message: "Yo"},
         ]
     }
+}
+
+export const addPost = (postMessage: string) => {
+   const newPost: PostsType = {
+        id: 5,
+        message: postMessage,
+        likesCount: 0,
+    };
+    state.profilePage.posts.push(newPost)
+    rerenderEntireTree(state)
 }
