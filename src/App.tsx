@@ -8,11 +8,12 @@ import {BrowserRouter, Route} from "react-router-dom";
 import {News} from "./components/News/News";
 import {Music} from "./components/Music/Music";
 import {Setting} from "./components/Setting/Setting";
-import {PostsType, StatePropsType} from "./redux/state";
+import {AppPropsType} from "./redux/state";
 
-export type ProfileCallbackProps = {
-    posts: PostsType[]
-    addPost: (postMessage: string) => void
+export type StatePropsType = {
+    state: AppPropsType
+    addPost: () => void
+    updateNewPostText: (newText: string) => void
 }
 
 const App = (props: StatePropsType) => {
@@ -23,7 +24,11 @@ const App = (props: StatePropsType) => {
                 <Navbar/>
                 <div className={"app-wrapper-content"}>
                     <Route path={'/dialogs'} render={() => <Dialogs dialogs={props.state.messagesPage.dialogs} messages={props.state.messagesPage.messages}/>}/>
-                    <Route path={'/profile'} render={() => <Profile posts={props.state.profilePage.posts} addPost={props.addPost}/>}/>
+                    <Route path={'/profile'} render={() => <Profile posts={props.state.profilePage.posts}
+                                                                    addPost={props.addPost}
+                                                                    newPostMessage={props.state.profilePage.newPostText}
+                                                                    updateNewPostText={props.updateNewPostText}
+                    />}/>
                     <Route path={'/news'} render={() => <News/>}/>
                     <Route path={'/music'} render={() => <Music/>}/>
                     <Route path={'/setting'} render={() => <Setting/>}/>
