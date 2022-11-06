@@ -3,31 +3,22 @@ import "./App.css";
 import {Header} from "./components/Header/Header";
 import {Navbar} from "./components/Navbar/Navbar";
 import {Profile,} from "./components/Profile/Profile";
-import {Dialogs} from "./components/Dialogs/Dialogs";
 import {BrowserRouter, Route} from "react-router-dom";
 import {News} from "./components/News/News";
 import {Music} from "./components/Music/Music";
 import {Setting} from "./components/Setting/Setting";
-import {StorePropsType} from "./redux/state";
+import {DialogsContainer} from "./components/Dialogs/DialogsContainer";
 
-export type AppStorePropsType = {
-    store: StorePropsType
-}
 
-const App = (props: AppStorePropsType) => {
-    const state = props.store.getState()
+const App = () => {
     return (
         <BrowserRouter>
             <div className={"app-wrapper"}>
                 <Header/>
                 <Navbar/>
                 <div className={"app-wrapper-content"}>
-                    <Route path={"/dialogs"} render={() => <Dialogs dialogsState={state.dialogsPage}
-                                                                    dispatch={props.store.dispatch.bind(props.store)}/>}/>
-                    <Route path={"/profile"} render={() => <Profile posts={state.profilePage.posts}
-                                                                    dispatch={props.store.dispatch.bind(props.store)}
-                                                                    newPostMessage={state.profilePage.newPostText}
-                    />}/>
+                    <Route path={"/dialogs"} render={() => <DialogsContainer />}/>
+                    <Route path={"/profile"} render={() => <Profile/>}/>
                     <Route path={"/news"} render={() => <News/>}/>
                     <Route path={"/music"} render={() => <Music/>}/>
                     <Route path={"/setting"} render={() => <Setting/>}/>

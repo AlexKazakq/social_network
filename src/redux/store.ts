@@ -5,7 +5,7 @@ export type AppPropsType = {
     profilePage: ProfilePageType
     dialogsPage: DialogPageType
 }
-export type ProfilePageType = {
+type ProfilePageType = {
     posts: PostsType[]
     newPostText: string
 }
@@ -15,16 +15,16 @@ export type DialogPageType = {
     newMessageBody: string
 }
 
-export type PostsType = {
+ type PostsType = {
     id?: number
     message: string
     likesCount: number
 }
-export type DialogsType = {
+ type DialogsType = {
     id: number
     name: string
 }
-export type MessagesType = {
+ type MessagesType = {
     id?: number
     message: string
 }
