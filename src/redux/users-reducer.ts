@@ -2,9 +2,9 @@ type ActionsTypes = ReturnType<typeof followAC> | ReturnType<typeof unfollowAC> 
 
 export type UserType = {
     id: number
-    photoUrl: string
+    photos: PhotosType
     followed: boolean
-    fullName: string
+    name: string
     status: string
     location: LocationType
 }
@@ -12,7 +12,10 @@ type LocationType = {
     city: string
     country: string
 }
-
+type PhotosType = {
+    small: string
+    large: string
+}
 
 const FOLLOW = "FOLLOW";
 const UNFOLLOW = "UNFOLLOW";
