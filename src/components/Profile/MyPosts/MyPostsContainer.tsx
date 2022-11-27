@@ -15,7 +15,8 @@ type MapDispatchPropsType = {
 let mapStateToProps = (state: AppStateType):InitialStateType => {
     return {
         posts: state.profilePage.posts,
-        newPostText: state.profilePage.newPostText
+        newPostText: state.profilePage.newPostText,
+        profile: null
     }
 }
 

@@ -1,4 +1,4 @@
-import profileReducer, {addPostActionCreator, updateNewPostActionCreator} from "./profile-reducer";
+import profileReducer, {addPostActionCreator, setUserProfileAC, updateNewPostActionCreator} from "./profile-reducer";
 import dialogsReducer, {sendMessageCreator, updateNewMessageBodyCreator} from "./dialogs-reducer";
 
 export type AppPropsType = {
@@ -58,6 +58,7 @@ export type ActionsTypes = ReturnType<typeof addPostActionCreator>
     | ReturnType<typeof updateNewPostActionCreator>
     | ReturnType<typeof updateNewMessageBodyCreator>
     | ReturnType<typeof sendMessageCreator>
+| ReturnType<typeof setUserProfileAC>
 
 
 
@@ -106,7 +107,7 @@ export let store: StorePropsType = {
 
 
     dispatch(action) { // {    type : "ADD-POST"}
-        this._state.profilePage = profileReducer(this._state.profilePage, action)
+        // this._state.profilePage = profileReducer(this._state.profilePage, action)
         this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
         this._callSubscriber()
     }
