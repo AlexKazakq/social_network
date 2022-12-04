@@ -14,8 +14,9 @@ type UsersPropsType = {
     follow: (userID: number) => void
     unfollow: (userID: number) => void
     onPageChanged: (pageNumber:number) => void
-    toggleFollowingProgress: (isFetching: boolean, userId: number) => void
-    followingInProgress: number[]
+    followingInProgress: number[],
+    followThunk: (userID: number) => void
+    unfollowThunk: (userID: number) => void
 }
 
 export const Users = (props: UsersPropsType) => {
@@ -51,27 +52,9 @@ export const Users = (props: UsersPropsType) => {
                         <div>
                             {u.followed
                                 ? <button disabled={props.followingInProgress.some(id => id === u.id)}
-                                    onClick={() => {
-                                    props.toggleFollowingProgress(true, u.id)
-                                    usersAPI.getUnfollow(u.id)
-                                        .then(resultCode => {
-                                            if (resultCode === 0) {
-                                                props.unfollow(u.id);
-                                            }
-                                            props.toggleFollowingProgress(false, u.id)
-                                        })
-                                }}>Unfollow</button>
+                                    onClick={() => {props.unfollowThunk(u.id)}}>Unfollow</button>
                                 : <button  disabled={props.followingInProgress.some(id => id === u.id)}
-                                    onClick={() => {
-                                    props.toggleFollowingProgress(true, u.id)
-                                    usersAPI.getFollow(u.id)
-                                        .then(resultCode => {
-                                            if (resultCode === 0) {
-                                                props.follow(u.id);
-                                            }
-                                            props.toggleFollowingProgress(false, u.id)
-                                        })
-                                }}>Follow</button>}
+                                    onClick={() => {props.followThunk(u.id)}}>Follow</button>}
                         </div>
                     </span>
                     <span>
