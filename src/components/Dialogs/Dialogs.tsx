@@ -13,7 +13,6 @@ type DialogsFromContainerType = {
 }
 
 export const Dialogs = (props: DialogsFromContainerType) => {
-
     let state = props.dialogsPage
 
     let dialogsElements = state.dialogs.map(d => <DialogItem name={d.name} key={d.id} id={d.id}/>)
@@ -29,8 +28,6 @@ export const Dialogs = (props: DialogsFromContainerType) => {
         let body = e.currentTarget.value;
         props.updateNewMessage(body);
     }
-
-    if (!props.isAuth) return <Redirect to={'login'}/>
 
     return (
         <div className={s.dialogs}>

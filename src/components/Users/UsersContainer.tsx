@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ComponentType} from "react";
 import {connect} from "react-redux";
 import {AppStateType} from "../../redux/redux-store";
 import {
@@ -9,6 +9,8 @@ import {
 } from "../../redux/users-reducer";
 import {Users} from "./Users";
 import {Preloader} from "../common/Preloader/Preloader";
+import {withAuthRedirect} from "../../hoc/withAuthRiderect";
+import {compose} from "redux";
 
 
 
@@ -41,7 +43,7 @@ export class UsersAPIComponent extends React.Component <UsersAPIPropsType> {
 
     render() {
 
-        return <>
+        return <div>
             {this.props.isFetching ? <Preloader/> : null}
             <Users
             users={this.props.users}
@@ -55,7 +57,7 @@ export class UsersAPIComponent extends React.Component <UsersAPIPropsType> {
             followThunk={this.props.followThunk}
             unfollowThunk={this.props.unfollowThunk}
         />
-        </>;
+        </div>;
     }
 }
 
@@ -71,13 +73,15 @@ let mapStateToProps = (state: AppStateType) => {
     }
 }
 
-export const UsersContainer = connect(mapStateToProps, {
-    follow: followAC,
-    unfollow: unfollowAC,
-    setCurrentPage: setCurrentPageAC,
-    toggleFollowingProgress: toggleFollowingProgressAC,
-    getUsersThunk: getUsersThunkCreator,
-    followThunk: followThunkCreator,
-    unfollowThunk: unfollowThunkCreator
-})(UsersAPIComponent)
-
+export const UsersContainer = compose<ComponentType>(
+    withAuthRedirect,
+    connect(mapStateToProps, {
+        follow: followAC,
+        unfollow: unfollowAC,
+        setCurrentPage: setCurrentPageAC,
+        toggleFollowingProgress: toggleFollowingProgressAC,
+        getUsersThunk: getUsersThunkCreator,
+        followThunk: followThunkCreator,
+        unfollowThunk: unfollowThunkCreator
+    })
+)(UsersAPIComponent)
