@@ -16,7 +16,8 @@ let mapStateToProps = (state: AppStateType):InitialStateType => {
     return {
         posts: state.profilePage.posts,
         newPostText: state.profilePage.newPostText,
-        profile: null
+        profile: null,
+        status: ''
     }
 }
 

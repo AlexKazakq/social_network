@@ -2,7 +2,7 @@ import React, {ComponentType} from "react";
 import {Profile} from "./Profile";
 
 import {connect} from "react-redux";
-import {getUserProfileThunk} from "../../redux/profile-reducer";
+import {getStatusThunk, getUserProfileThunk, updateStatusThunk} from "../../redux/profile-reducer";
 import {AppStateType} from "../../redux/redux-store";
 import {Redirect, RouteComponentProps, withRouter} from "react-router-dom";
 import {withAuthRedirect} from "../../hoc/withAuthRiderect";
@@ -11,10 +11,13 @@ import {compose} from "redux";
 
 type MapStatePropsType = {
     profile: any
+    status: string
 }
 
 type MapDispatchPropsType = {
     getUserProfileThunk: (userId: string) => void
+    getStatusThunk: (userId: string) => void
+    updateStatusThunk: (status: string) => void
 }
 
 
@@ -29,14 +32,15 @@ export class ProfileAPIComponent extends React.Component<PropsType> {
     componentDidMount() {
         let userId = this.props.match.params.userId
         if (!userId) {
-            userId = "2";
+            userId = "26540";
         }
         this.props.getUserProfileThunk(userId)
+        this.props.getStatusThunk(userId)
     }
 
     render() {
         return (
-            <Profile {...this.props} profile={this.props.profile}/>
+            <Profile {...this.props} profile={this.props.profile} status={this.props.status} updateStatusThunk={this.props.updateStatusThunk}/>
         )
     }
 }
@@ -44,13 +48,13 @@ export class ProfileAPIComponent extends React.Component<PropsType> {
 
 let mapStateToProps = (state: AppStateType): MapStatePropsType => ({
     profile: state.profilePage.profile,
+    status: state.profilePage.status
 })
 
 
 
 export const ProfileContainer = compose<ComponentType>(
-    connect(mapStateToProps, {getUserProfileThunk}),
-    withRouter,
-    withAuthRedirect
+    connect(mapStateToProps, {getUserProfileThunk, getStatusThunk, updateStatusThunk}),
+    withRouter
 )
 (ProfileAPIComponent);
