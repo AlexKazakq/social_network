@@ -1,5 +1,5 @@
-import profileReducer, {addPostActionCreator, setUserProfileAC, updateNewPostActionCreator} from "./profile-reducer";
-import dialogsReducer, {sendMessageCreator, updateNewMessageBodyCreator} from "./dialogs-reducer";
+import {addPostActionCreator, setUserProfileAC} from "./profile-reducer";
+import dialogsReducer, {sendMessageCreator} from "./dialogs-reducer";
 
 export type AppPropsType = {
     profilePage: ProfilePageType
@@ -55,8 +55,6 @@ export type StorePropsType = {
 // export type updateNewPostTextActionType = ReturnType<typeof updateNewPostActionCreator >
 
 export type ActionsTypes = ReturnType<typeof addPostActionCreator>
-    | ReturnType<typeof updateNewPostActionCreator>
-    | ReturnType<typeof updateNewMessageBodyCreator>
     | ReturnType<typeof sendMessageCreator>
 | ReturnType<typeof setUserProfileAC>
 

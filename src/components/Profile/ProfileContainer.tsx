@@ -1,11 +1,9 @@
 import React, {ComponentType} from "react";
 import {Profile} from "./Profile";
-
 import {connect} from "react-redux";
 import {getStatusThunk, getUserProfileThunk, updateStatusThunk} from "../../redux/profile-reducer";
 import {AppStateType} from "../../redux/redux-store";
-import {Redirect, RouteComponentProps, withRouter} from "react-router-dom";
-import {withAuthRedirect} from "../../hoc/withAuthRiderect";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {compose} from "redux";
 
 

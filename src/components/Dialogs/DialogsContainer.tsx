@@ -2,7 +2,6 @@ import React, {ComponentType} from "react";
 import {
     InitialStateType,
     sendMessageCreator,
-    updateNewMessageBodyCreator
 } from "../../redux/dialogs-reducer";
 import {Dialogs} from "./Dialogs";
 import {connect} from "react-redux";
@@ -12,8 +11,7 @@ import {withAuthRedirect} from "../../hoc/withAuthRiderect";
 
 
 type MapDispatchPropsType = {
-    updateNewMessage: (body: string) => void,
-    onSendMessage: () => void
+    onSendMessage: (newMessageBody: string) => void
 }
 
 type MapStateToPropsType = {
@@ -28,11 +26,8 @@ let mapStateToProps = (state: AppStateType): MapStateToPropsType => {
 
 let mapDispatchToProps = (dispatch: Dispatch):MapDispatchPropsType => {
     return {
-        updateNewMessage: (body: string) => {
-            dispatch(updateNewMessageBodyCreator(body))
-        },
-        onSendMessage: () => {
-            dispatch(sendMessageCreator())
+        onSendMessage: (newMessageBody: string) => {
+            dispatch(sendMessageCreator(newMessageBody))
         }
     }
 }
