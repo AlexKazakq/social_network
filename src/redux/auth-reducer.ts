@@ -41,8 +41,8 @@ export const setAuthUserDataAC = (data: InitialStateType, isAuth: boolean) => ({
     isAuth
 })
 
-export const getAuthUserDataThunkCreator: any = () => (dispatch: Dispatch) => {
-    authAPI.getAuthMe().then(data => {
+export const getAuthUserDataTC: any = () => (dispatch: Dispatch) => {
+    return authAPI.getAuthMe().then(data => {
         if (data.resultCode === 0) {
             dispatch(setAuthUserDataAC(data.data, true))
         }
@@ -54,7 +54,7 @@ export const loginTC = (email: string, password: string, rememberMe: boolean) =>
 
     authAPI.login(email, password, rememberMe).then(data => {
         if (data.resultCode === 0) {
-            dispatch(getAuthUserDataThunkCreator())
+            dispatch(getAuthUserDataTC())
         } else {
             let message = data.messages.length > 0 ? data.messages[0] : 'Some error';
             dispatch(stopSubmit('login', {_error: message}))

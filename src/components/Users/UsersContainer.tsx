@@ -5,12 +5,20 @@ import {
     followAC,
     setCurrentPageAC,
     unfollowAC,
-    UserType, toggleFollowingProgressAC, getUsersThunkCreator, followThunkCreator, unfollowThunkCreator
+    UserType, toggleFollowingProgressAC, requestUsersTC, followThunkCreator, unfollowThunkCreator
 } from "../../redux/users-reducer";
 import {Users} from "./Users";
 import {Preloader} from "../common/Preloader/Preloader";
 import {withAuthRedirect} from "../../hoc/withAuthRiderect";
 import {compose} from "redux";
+import {
+    getCurrentPage,
+    getFollowingInProgress,
+    getIsFetching,
+    getPageSize,
+    getTotalUsersCount,
+    getUsers
+} from "../../redux/user-selectors";
 
 
 
@@ -62,25 +70,35 @@ export class UsersAPIComponent extends React.Component <UsersAPIPropsType> {
 }
 
 
+// let mapStateToProps = (state: AppStateType) => {
+//     return {
+//         users: state.usersPage.users,
+//         pageSize: state.usersPage.pageSize,
+//         totalUsersCount: state.usersPage.totalUsersCount,
+//         currentPage: state.usersPage.currentPage,
+//         isFetching: state.usersPage.isFetching,
+//         followingInProgress: state.usersPage.followingInProgress
+//     }
+// }
+
 let mapStateToProps = (state: AppStateType) => {
     return {
-        users: state.usersPage.users,
-        pageSize: state.usersPage.pageSize,
-        totalUsersCount: state.usersPage.totalUsersCount,
-        currentPage: state.usersPage.currentPage,
-        isFetching: state.usersPage.isFetching,
-        followingInProgress: state.usersPage.followingInProgress
+        users: getUsers(state),
+        pageSize: getPageSize(state),
+        totalUsersCount: getTotalUsersCount(state),
+        currentPage: getCurrentPage(state),
+        isFetching: getIsFetching(state),
+        followingInProgress: getFollowingInProgress(state)
     }
 }
 
 export const UsersContainer = compose<ComponentType>(
-    withAuthRedirect,
     connect(mapStateToProps, {
         follow: followAC,
         unfollow: unfollowAC,
         setCurrentPage: setCurrentPageAC,
         toggleFollowingProgress: toggleFollowingProgressAC,
-        getUsersThunk: getUsersThunkCreator,
+        getUsersThunk: requestUsersTC,
         followThunk: followThunkCreator,
         unfollowThunk: unfollowThunkCreator
     })
