@@ -3,13 +3,16 @@ import {connect} from "react-redux";
 import {AppStateType} from "../../redux/redux-store";
 import {
     followAC,
+    followThunkCreator,
+    requestUsersTC,
     setCurrentPageAC,
+    toggleFollowingProgressAC,
     unfollowAC,
-    UserType, toggleFollowingProgressAC, requestUsersTC, followThunkCreator, unfollowThunkCreator
+    unfollowThunkCreator,
+    UserType
 } from "../../redux/users-reducer";
 import {Users} from "./Users";
 import {Preloader} from "../common/Preloader/Preloader";
-import {withAuthRedirect} from "../../hoc/withAuthRiderect";
 import {compose} from "redux";
 import {
     getCurrentPage,
@@ -19,7 +22,6 @@ import {
     getTotalUsersCount,
     getUsers
 } from "../../redux/user-selectors";
-
 
 
 type UsersAPIPropsType = {
@@ -39,47 +41,35 @@ type UsersAPIPropsType = {
 }
 
 export class UsersAPIComponent extends React.Component <UsersAPIPropsType> {
-
     componentDidMount() {
-        this.props.getUsersThunk(this.props.currentPage, this.props.pageSize)
+        const {currentPage, pageSize} = this.props
+        this.props.getUsersThunk(currentPage, pageSize)
     }
 
-    onPageChanged = (pageNumber:number) => {
+    onPageChanged = (pageNumber: number) => {
+        const {pageSize} = this.props
         this.props.setCurrentPage(pageNumber)
-        this.props.getUsersThunk(pageNumber, this.props.pageSize)
+        this.props.getUsersThunk(pageNumber, pageSize)
     }
 
     render() {
-
         return <div>
             {this.props.isFetching ? <Preloader/> : null}
             <Users
-            users={this.props.users}
-            pageSize={this.props.currentPage}
-            totalUsersCount={this.props.totalUsersCount}
-            currentPage={this.props.currentPage}
-            follow={this.props.follow}
-            unfollow={this.props.unfollow}
-            onPageChanged={this.onPageChanged}
-            followingInProgress={this.props.followingInProgress}
-            followThunk={this.props.followThunk}
-            unfollowThunk={this.props.unfollowThunk}
-        />
+                users={this.props.users}
+                pageSize={this.props.currentPage}
+                totalUsersCount={this.props.totalUsersCount}
+                currentPage={this.props.currentPage}
+                follow={this.props.follow}
+                unfollow={this.props.unfollow}
+                onPageChanged={this.onPageChanged}
+                followingInProgress={this.props.followingInProgress}
+                followThunk={this.props.followThunk}
+                unfollowThunk={this.props.unfollowThunk}
+            />
         </div>;
     }
 }
-
-
-// let mapStateToProps = (state: AppStateType) => {
-//     return {
-//         users: state.usersPage.users,
-//         pageSize: state.usersPage.pageSize,
-//         totalUsersCount: state.usersPage.totalUsersCount,
-//         currentPage: state.usersPage.currentPage,
-//         isFetching: state.usersPage.isFetching,
-//         followingInProgress: state.usersPage.followingInProgress
-//     }
-// }
 
 let mapStateToProps = (state: AppStateType) => {
     return {

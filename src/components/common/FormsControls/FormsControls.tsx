@@ -1,9 +1,10 @@
-import react from "react";
-import s from './FormsControls.module.css'
+import React from "react";
+import s from "./FormsControls.module.css"
+import {Field} from "redux-form";
 
 type TextareaType = {
-    input:inputType
-    meta:metaType
+    input: inputType
+    meta: metaType
     placeholder: string
     children: any
 }
@@ -35,15 +36,15 @@ type metaType = {
     warning: undefined | any
 }
 
-const FormControl = ({input, meta, ...props}: TextareaType) => {
-    const hasError = meta.touched && meta.error
+const FormControl = ({meta: {touched, error}, children}: TextareaType) => {
+    const hasError = touched && error
 
     return (
-        <div className={s.formControl + ' ' + (hasError ? s.error : '')}>
+        <div className={s.formControl + " " + (hasError ? s.error : "")}>
             <div>
-                {props.children}
+                {children}
             </div>
-            {hasError && <span>{meta.error}</span>}
+            {hasError && <span>{error}</span>}
         </div>
     )
 }
@@ -65,3 +66,15 @@ export const Input = (props: TextareaType) => {
     )
 }
 
+export const createField = (placeholder: string | null, name: string, validators: any[], component: any, props = {}, text = '') => {
+    return (
+        <div>
+            <Field placeholder={placeholder}
+                   name={name}
+                   component={component}
+                   validate={validators}
+                   {...props}
+            />{text}
+        </div>
+    )
+}

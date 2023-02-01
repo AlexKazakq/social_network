@@ -1,13 +1,13 @@
 import React from "react";
 import "./App.css";
 import {Navbar} from "./components/Navbar/Navbar";
-import {BrowserRouter, Route} from "react-router-dom";
+import {Route} from "react-router-dom";
 import {News} from "./components/News/News";
 import {Music} from "./components/Music/Music";
 import {Setting} from "./components/Setting/Setting";
 import {ProfileContainer} from "./components/Profile/ProfileContainer";
 import {HeaderContainer} from "./components/Header/HeaderContainer";
-import {ContainerLogin, Login} from "./Login/Login";
+import {ContainerLogin} from "./Login/Login";
 import {DialogsContainer} from "./components/Dialogs/DialogsContainer";
 import {UsersContainer} from "./components/Users/UsersContainer";
 import {connect} from "react-redux";
@@ -31,7 +31,6 @@ class App extends React.Component<AppPropsType>{
             return <Preloader/>
         }
         return (
-            <BrowserRouter>
                 <div className={"app-wrapper"}>
                     <HeaderContainer/>
                     <Navbar/>
@@ -45,7 +44,6 @@ class App extends React.Component<AppPropsType>{
                         <Route path={"/login"} render={() => <ContainerLogin/>}/>
                     </div>
                 </div>
-            </BrowserRouter>
         );
     }
 }

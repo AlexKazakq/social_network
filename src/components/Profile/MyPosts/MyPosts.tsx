@@ -1,4 +1,4 @@
-import React from "react";
+import React, {memo} from "react";
 import s from "./MyPosts.module.css";
 import {Post} from "./Posts/Post";
 import {Field, reduxForm} from "redux-form";
@@ -22,7 +22,7 @@ type FormDataType = {
 }
 
 
-export const MyPosts = (props: MyPostsCallBackType) => {
+export const MyPosts = memo((props: MyPostsCallBackType) => {
     let postsElement = props.posts.map(p => <Post message={p.message} likesCount={p.likesCount}/>)
 
     const onAddPostButtonHandler = (values: FormDataType) => {
@@ -39,7 +39,7 @@ export const MyPosts = (props: MyPostsCallBackType) => {
             </div>
         </div>
     )
-}
+})
 
 let maxLength10 = maxLengthCreator(10)
 
