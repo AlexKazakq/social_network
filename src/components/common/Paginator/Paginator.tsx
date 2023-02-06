@@ -4,15 +4,15 @@ import styles from "./Paginator.module.css";
 
 type PaginatorPropsType = {
     pageSize: number
-    totalUsersCount: number
+    totalItemsCount: number
     currentPage: number
     onPageChanged: (pageNumber: number) => void
 }
 
-export const Paginator = ({pageSize, totalUsersCount, currentPage, onPageChanged}: PaginatorPropsType) => {
+export const Paginator = ({pageSize, totalItemsCount, currentPage, onPageChanged}: PaginatorPropsType) => {
 
     const PAGES_LENGTH = 11;
-    const totalPagesCount = Math.ceil(totalUsersCount / pageSize);
+    const totalPagesCount = Math.ceil(totalItemsCount / pageSize);
     const pagesCount = totalPagesCount < PAGES_LENGTH ? totalPagesCount : PAGES_LENGTH;
     const half = Math.floor(pagesCount / 2);
     let startPage = currentPage - half;
