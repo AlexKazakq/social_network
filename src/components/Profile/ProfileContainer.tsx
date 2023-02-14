@@ -1,7 +1,13 @@
 import React, {ComponentType} from "react";
 import {Profile} from "./Profile";
 import {connect} from "react-redux";
-import {getStatusThunk, getUserProfileThunk, updateStatusThunk} from "../../redux/profile-reducer";
+import {
+    getStatusThunk,
+    getUserProfileThunk,
+    savePhoto,
+    saveProfile,
+    updateStatusThunk
+} from "../../redux/profile-reducer";
 import {AppStateType} from "../../redux/redux-store";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {compose} from "redux";
@@ -18,6 +24,8 @@ type MapDispatchPropsType = {
     getUserProfileThunk: (userId: string) => void
     getStatusThunk: (userId: string) => void
     updateStatusThunk: (status: string) => void
+    savePhoto: (file: any) => void
+    saveProfile: (profile: any) => Promise<void>
 }
 
 
@@ -29,12 +37,12 @@ type PropsType = RouteComponentProps<PathParamsType> & ProfileContainerPropsType
 
 export class ProfileAPIComponent extends React.Component<PropsType> {
 
-    componentDidMount() {
+    refreshProfile() {
         let userId = this.props.match.params.userId
         if (!userId) {
-            userId = this.props.authorizedUserId ? this.props.authorizedUserId: '';
+            userId = this.props.authorizedUserId ? this.props.authorizedUserId : "";
             if (!userId) {
-                this.props.history.push('/login')
+                this.props.history.push("/login")
             }
 
         }
@@ -42,9 +50,26 @@ export class ProfileAPIComponent extends React.Component<PropsType> {
         this.props.getStatusThunk(userId)
     }
 
+    componentDidMount() {
+        this.refreshProfile()
+    }
+
+    componentDidUpdate(prevProps: Readonly<PropsType>, prevState: Readonly<{}>, snapshot?: any) {
+        if (this.props.match.params.userId !== prevProps.match.params.userId) {
+            this.refreshProfile()
+        }
+    }
+
     render() {
         return (
-            <Profile {...this.props} profile={this.props.profile} status={this.props.status} updateStatusThunk={this.props.updateStatusThunk}/>
+            <Profile {...this.props}
+                     isOwner={!this.props.match.params.userId}
+                     profile={this.props.profile}
+                     status={this.props.status}
+                     updateStatusThunk={this.props.updateStatusThunk}
+                     saveProfile={this.props.saveProfile}
+                     savePhoto={this.props.savePhoto}
+            />
         )
     }
 }
@@ -58,9 +83,8 @@ let mapStateToProps = (state: AppStateType): MapStatePropsType => ({
 })
 
 
-
 export const ProfileContainer = compose<ComponentType>(
-    connect(mapStateToProps, {getUserProfileThunk, getStatusThunk, updateStatusThunk}),
+    connect(mapStateToProps, {getUserProfileThunk, getStatusThunk, updateStatusThunk, savePhoto, saveProfile}),
     withRouter
 )
 (ProfileAPIComponent);

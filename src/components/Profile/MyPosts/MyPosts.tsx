@@ -23,7 +23,7 @@ type FormDataType = {
 
 
 export const MyPosts = memo((props: MyPostsCallBackType) => {
-    let postsElement = props.posts.map(p => <Post message={p.message} likesCount={p.likesCount}/>)
+    let postsElement = props.posts.map(p => <Post key={p.id} message={p.message} likesCount={p.likesCount}/>)
 
     const onAddPostButtonHandler = (values: FormDataType) => {
         props.addPost(values.newPostText);
