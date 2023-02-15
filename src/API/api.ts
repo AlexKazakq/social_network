@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const baseUrl = 'https://social-network.samuraijs.com/api/1.0/'
-
 const instance = axios.create({
     withCredentials: true,
     baseURL: 'https://social-network.samuraijs.com/api/1.0/'
@@ -53,16 +51,22 @@ export const profileAPI = {
 
 export const authAPI = {
     getAuthMe() {
-        return instance.get(baseUrl + `auth/me`)
+        return instance.get(`auth/me`)
             .then(response => response.data)
     },
-    login(email: string, password: string, rememberMe: boolean = false) {
-        return instance.post(baseUrl + `auth/login`, {email, password, rememberMe})
+    login(email: string, password: string, rememberMe: boolean = false, captcha: string | null = null) {
+        return instance.post(`auth/login`, {email, password, rememberMe, captcha})
             .then(response => response.data)
     },
     logout() {
-        return instance.delete(baseUrl + `auth/login`)
+        return instance.delete(`auth/login`)
             .then(response => response.data)
     }
+}
+
+export const securityAPI = {
+    getCaptchaUrl() {
+        return instance.get(`security/get-captcha-url`).then(res => res.data)
+    },
 }
 

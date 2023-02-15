@@ -30,9 +30,17 @@ type AppPropsType = {
 }
 
 class App extends React.Component<AppPropsType> {
+    catchAllUnhandledErrors = (promiseRejectionEvent: PromiseRejectionEvent) => {
+        alert('some error occurred');
 
+    }
     componentDidMount() {
         this.props.initializeApp()
+        window.addEventListener('unhandledrejection', this.catchAllUnhandledErrors)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('unhandledrejection', this.catchAllUnhandledErrors)
     }
 
     render() {
