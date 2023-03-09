@@ -1,23 +1,47 @@
 import React from "react";
-import s from './Header.module.css';
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
+import {Avatar, Button, Col, Layout, Menu, Row} from "antd";
+import {UserOutlined} from "@ant-design/icons";
+import {useDispatch, useSelector} from "react-redux";
+import {selectCurrentUserLogin, selectIsAuth} from "../../redux/auth-selectors";
+import {logoutTC} from "../../redux/auth-reducer";
 
-type HeaderPropsType = {
-    isAuth: boolean,
-    login: string | null
-    logout: () => void
-}
+export const AppHeader = () => {
 
-export const Header = (props: HeaderPropsType) => {
+    const isAuth = useSelector(selectIsAuth)
+    const login = useSelector(selectCurrentUserLogin)
+    const dispatch = useDispatch()
+
+    const logoutCallBack = () => {
+        // @ts-ignore
+        dispatch(logoutTC())
+    }
+
+    const {Header} = Layout;
+
     return (
-        <header className={s.header}>
-            <img src="https://upload.wikimedia.org/wikipedia/ru/c/ce/Logo_team_spirit.svg" alt=""/>
-
-            <div className={s.loginBlock}>
-                {props.isAuth ?
-                    <div>{props.login} - <button onClick={props.logout}>Log out</button></div>
-                    : <NavLink to={'/login'}>Login</NavLink>}
-            </div>
-        </header>
+        <Header className="header">
+            <Row>
+                <Col span={18}>
+                    <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["2"]}>
+                        <Menu.Item key={"1"}><Link to={"/developers"}>Developers</Link></Menu.Item>
+                    </Menu>
+                </Col>
+                {isAuth ?
+                    <>
+                        <Col span={2}>
+                            <Avatar alt={login || ""} style={{backgroundColor: "#87d068"}} icon={<UserOutlined/>}/>
+                        </Col>
+                        <Col span={4}>
+                            <Button onClick={logoutCallBack}>Log out</Button>
+                        </Col>
+                    </>
+                    : <Col span={6}>
+                        <Button>
+                            <Link to={"/login"}>Login</Link>
+                        </Button>
+                    </Col>}
+            </Row>
+        </Header>
     )
 }

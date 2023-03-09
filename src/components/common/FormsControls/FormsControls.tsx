@@ -1,12 +1,16 @@
 import React from "react";
 import s from "./FormsControls.module.css"
-import {Field} from "redux-form";
+import {Field, WrappedFieldMetaProps} from "redux-form";
+import {FieldValidatorType} from "../../../utils/validators/validators";
+
+
+
 
 type TextareaType = {
     input: inputType
     meta: metaType
     placeholder: string
-    children: any
+    children: React.ReactNode
 }
 type inputType = {
     name: string
@@ -17,24 +21,7 @@ type inputType = {
     onFocus: any
     value: string
 }
-type metaType = {
-    active: boolean
-    asyncValidating: boolean
-    autofilled: boolean
-    dirty: boolean
-    dispatch: any
-    error: undefined | any
-    form: string
-    initial: undefined | any
-    invalid: boolean
-    pristine: boolean
-    submitFailed: boolean
-    submitting: boolean
-    touched: boolean
-    valid: boolean
-    visited: boolean
-    warning: undefined | any
-}
+type metaType = WrappedFieldMetaProps
 
 const FormControl = ({meta: {touched, error}, children}: TextareaType) => {
     const hasError = touched && error
@@ -66,7 +53,13 @@ export const Input = (props: TextareaType) => {
     )
 }
 
-export const createField = (placeholder: string | null, name: string, validators: any[], component: any, props = {}, text = '') => {
+export function createField<T extends string>(placeholder: string | undefined,
+                            name: T,
+                            validators: Array<FieldValidatorType>,
+                            component: React.FC<TextareaType>,
+                            props = {},
+                            text = '')
+{
     return (
         <div>
             <Field placeholder={placeholder}

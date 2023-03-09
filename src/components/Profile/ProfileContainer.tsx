@@ -11,50 +11,34 @@ import {
 import {AppStateType} from "../../redux/redux-store";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {compose} from "redux";
+import {ProfileType} from "../../types/types";
 
-
-type MapStatePropsType = {
-    profile: any
-    status: string
-    authorizedUserId: string | null
-    isAuth: boolean
-}
-
-type MapDispatchPropsType = {
-    getUserProfileThunk: (userId: string) => void
-    getStatusThunk: (userId: string) => void
-    updateStatusThunk: (status: string) => void
-    savePhoto: (file: any) => void
-    saveProfile: (profile: any) => Promise<void>
-}
-
-
-type PathParamsType = {
-    userId: string
-}
 type ProfileContainerPropsType = MapStatePropsType & MapDispatchPropsType
 type PropsType = RouteComponentProps<PathParamsType> & ProfileContainerPropsType
 
-export class ProfileAPIComponent extends React.Component<PropsType> {
+export class ProfileAPIComponent extends React.Component<ProfileContainerPropsType & PropsType> {
 
     refreshProfile() {
-        let userId = this.props.match.params.userId
+        debugger
+        let userId: number | null = +this.props.match.params.userId
         if (!userId) {
-            userId = this.props.authorizedUserId ? this.props.authorizedUserId : "";
+            debugger
+            userId = this.props.authorizedUserId;
             if (!userId) {
                 this.props.history.push("/login")
             }
-
         }
-        this.props.getUserProfileThunk(userId)
-        this.props.getStatusThunk(userId)
+            this.props.getUserProfileThunk(userId as number)
+            this.props.getStatusThunk(userId as number)
     }
 
     componentDidMount() {
+        debugger
         this.refreshProfile()
     }
 
-    componentDidUpdate(prevProps: Readonly<PropsType>, prevState: Readonly<{}>, snapshot?: any) {
+    componentDidUpdate(prevProps: Readonly<PropsType>, prevState: Readonly<PropsType>) {
+        debugger
         if (this.props.match.params.userId !== prevProps.match.params.userId) {
             this.refreshProfile()
         }
@@ -67,7 +51,6 @@ export class ProfileAPIComponent extends React.Component<PropsType> {
                      profile={this.props.profile}
                      status={this.props.status}
                      updateStatusThunk={this.props.updateStatusThunk}
-                     saveProfile={this.props.saveProfile}
                      savePhoto={this.props.savePhoto}
             />
         )
@@ -83,8 +66,27 @@ let mapStateToProps = (state: AppStateType): MapStatePropsType => ({
 })
 
 
-export const ProfileContainer = compose<ComponentType>(
+export default compose<ComponentType>(
     connect(mapStateToProps, {getUserProfileThunk, getStatusThunk, updateStatusThunk, savePhoto, saveProfile}),
     withRouter
 )
 (ProfileAPIComponent);
+
+type MapStatePropsType = {
+    profile: ProfileType | null
+    status: string
+    authorizedUserId: number | null
+    isAuth: boolean
+}
+
+type MapDispatchPropsType = {
+    getUserProfileThunk: (userId: number) => void
+    getStatusThunk: (userId: number) => void
+    updateStatusThunk: (status: string) => void
+    savePhoto: (file: File) => void
+    saveProfile: (profile: ProfileType) => Promise<void>
+}
+
+type PathParamsType = {
+    userId: string
+}

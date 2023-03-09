@@ -2,32 +2,21 @@ import React from "react";
 import s from "./Dialogs.module.css";
 import {DialogItem} from "./DialogItem/DialogsItem";
 import {Message} from "./Message/Message";
-import {DialogPageType} from "../../redux/store";
-import {Field, reduxForm} from "redux-form";
+import {reduxForm} from "redux-form";
 import {InjectedFormProps} from "redux-form/lib/reduxForm";
 
 import {maxLengthCreator, requiredField} from "../../utils/validators/validators";
-import {Textarea} from "../common/FormsControls/FormsControls";
-
-type DialogsFromContainerType = {
-    dialogsPage: DialogPageType
-    onSendMessage: (values: string) => void
-    isAuth: boolean
-}
-
-type FormDataType = {
-    newMessageBody: string
-}
+import {createField, Textarea} from "../common/FormsControls/FormsControls";
+import {DialogsInitialStateType} from "../../redux/dialogs-reducer";
 
 export const Dialogs = (props: DialogsFromContainerType) => {
     let state = props.dialogsPage
 
     let dialogsElements = state.dialogs.map(d => <DialogItem name={d.name} key={d.id} id={d.id}/>)
     let messagesElements = state.messages.map(m => <Message key={m.id} message={m.message}/>)
-    // let newMessageBody = state.newMessageBody
 
     const addNewMessage = (values: FormDataType) => {
-        props.onSendMessage(values.newMessageBody)
+        props.sendMessageCreator(values.newMessageBody)
     }
 
     return (
@@ -49,7 +38,7 @@ const AddMessageForm = (props: InjectedFormProps<FormDataType>) => {
     return (
         <form onSubmit={props.handleSubmit}>
             <div>
-                <Field name={'newPostText'} component={Textarea} validate={[requiredField, maxLength50]} placeholder={'Enter your message'}/>
+                {createField<NewMessageFormValuesKeysType>('Enter your message', 'newMessageBody', [requiredField, maxLength50], Textarea)}
             </div>
             <div>
                 <button>Send</button>
@@ -60,3 +49,12 @@ const AddMessageForm = (props: InjectedFormProps<FormDataType>) => {
 
 const AddMessageFormRedux = reduxForm<FormDataType>({form: 'dialogAddMessageForm'})(AddMessageForm)
 
+type DialogsFromContainerType = {
+    dialogsPage: DialogsInitialStateType
+    sendMessageCreator: (values: string) => void
+}
+
+type FormDataType = {
+    newMessageBody: string
+}
+type NewMessageFormValuesKeysType = Extract<keyof FormDataType, string>

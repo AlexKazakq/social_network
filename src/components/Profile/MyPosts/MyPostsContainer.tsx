@@ -3,7 +3,6 @@ import {addPostActionCreator} from "../../../redux/profile-reducer";
 import {MyPosts} from "./MyPosts";
 import {connect} from "react-redux";
 import {AppStateType} from "../../../redux/redux-store";
-import {InitialStateType} from "../../../redux/profile-reducer";
 import {Dispatch} from "redux";
 
 
@@ -11,11 +10,9 @@ type MapDispatchPropsType = {
     addPost: (newPostText: string) => void,
 }
 
-let mapStateToProps = (state: AppStateType):InitialStateType => {
+let mapStateToProps = (state: AppStateType) => {
     return {
         posts: state.profilePage.posts,
-        profile: null,
-        status: ''
     }
 }
 

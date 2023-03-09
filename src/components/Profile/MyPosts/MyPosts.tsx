@@ -1,26 +1,11 @@
 import React, {memo} from "react";
 import s from "./MyPosts.module.css";
 import {Post} from "./Posts/Post";
-import {Field, reduxForm} from "redux-form";
+import {reduxForm} from "redux-form";
 import {InjectedFormProps} from "redux-form/lib/reduxForm";
 import {maxLengthCreator, requiredField} from "../../../utils/validators/validators";
-import {Textarea} from "../../common/FormsControls/FormsControls";
-
-export type PostsType = {
-    id?: number
-    message: string
-    likesCount: number
-}
-
-export type MyPostsCallBackType = {
-    posts: PostsType[]
-    addPost: (newPostText: string) => void
-}
-
-type FormDataType = {
-    newPostText: string
-}
-
+import {createField, Textarea} from "../../common/FormsControls/FormsControls";
+import {PostType} from "../../../types/types";
 
 export const MyPosts = memo((props: MyPostsCallBackType) => {
     let postsElement = props.posts.map(p => <Post key={p.id} message={p.message} likesCount={p.likesCount}/>)
@@ -47,7 +32,7 @@ let AddNewPostForm = (props: InjectedFormProps<FormDataType>) => {
     return (
         <form onSubmit={props.handleSubmit}>
             <div>
-                <Field name={'newPostText'} component={Textarea} validate={[requiredField, maxLength10]} placeholder={'Post message'}/>
+                {createField<MyPostFormValuesTypeKeys>('Post message', 'newPostText', [requiredField, maxLength10], Textarea)}
             </div>
             <div>
                 <button>Add post</button>
@@ -58,3 +43,14 @@ let AddNewPostForm = (props: InjectedFormProps<FormDataType>) => {
 }
 
 let AddNewPostFormRedux = reduxForm<FormDataType>({form: 'ProfileAddNewPostForm'})(AddNewPostForm)
+
+type MyPostFormValuesTypeKeys = Extract<keyof FormDataType, string>
+
+export type MyPostsCallBackType = {
+    posts: PostType[]
+    addPost: (newPostText: string) => void
+}
+
+type FormDataType = {
+    newPostText: string
+}

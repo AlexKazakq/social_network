@@ -4,15 +4,7 @@ import {Preloader} from "../../common/Preloader/Preloader";
 import {ProfileStatusWithHooks} from "./ProfileStatusWithHooks";
 import userPhoto from "../../../assets/images/user.png";
 import {ProfileDataFormReduxForm} from "./ProfileDataForm";
-
-type ProfileInfoPropsType = {
-    profile: any
-    status: string
-    updateStatusThunk: (status: string) => void
-    isOwner: boolean
-    savePhoto: (file: any) => void
-    saveProfile: (profile: any) => Promise<void>
-}
+import {ContactsType, ProfileType} from "../../../types/types";
 
 export const ProfileInfo = ({profile, status, updateStatusThunk, isOwner, savePhoto, saveProfile}: ProfileInfoPropsType) => {
 
@@ -28,7 +20,8 @@ export const ProfileInfo = ({profile, status, updateStatusThunk, isOwner, savePh
         }
     }
 
-    const onSubmit = (profile: any) => {
+    const onSubmit = (formData: ProfileType) => {
+        // todo: remove then
         saveProfile(profile).then(() => {
             setEditMode(false)
         })
@@ -36,9 +29,6 @@ export const ProfileInfo = ({profile, status, updateStatusThunk, isOwner, savePh
 
     return (
         <div>
-            <div>
-                <img src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg" alt=""/>
-            </div>
             <div className={s.descriptionBlock}>
                 <img src={profile.photos.large || userPhoto} className={s.mainPhoto}/>
                 {isOwner && <input type={'file'} onChange={onMainPhotoSelected}/>}
@@ -52,16 +42,6 @@ export const ProfileInfo = ({profile, status, updateStatusThunk, isOwner, savePh
         </div>
     );
 };
-
-type ContactPropsType = {
-    contactTitle: string,
-    contactValue: any
-}
-type ProfileDataPropsType = {
-    profile: any,
-    isOwner: boolean
-    goToEditMode: () => void
-}
 
 const ProfileData = ({profile, isOwner, goToEditMode}: ProfileDataPropsType) => {
     return (<div>
@@ -83,7 +63,7 @@ const ProfileData = ({profile, isOwner, goToEditMode}: ProfileDataPropsType) => 
             <b>About me</b>: {profile.aboutMe}
         </div>
         <div>
-            <b>Contacts</b>: {Object.keys(profile.contacts).map(key => <Contact key={key} contactTitle={key} contactValue={profile.contacts[key]}/>)}
+            <b>Contacts</b>: {Object.keys(profile.contacts).map(key => <Contact key={key} contactTitle={key} contactValue={profile.contacts[key as keyof ContactsType]}/>)}
         </div>
     </div>)
 }
@@ -91,4 +71,22 @@ const ProfileData = ({profile, isOwner, goToEditMode}: ProfileDataPropsType) => 
 
 const Contact = ({contactTitle, contactValue}: ContactPropsType) => {
     return <div className={s.contact}><b>{contactTitle}</b>: {contactValue}</div>
+}
+
+type ProfileInfoPropsType = {
+    profile: ProfileType | null
+    status: string
+    updateStatusThunk: (status: string) => void
+    isOwner: boolean
+    savePhoto: (file: File) => void
+    saveProfile: (profile: ProfileType) => Promise<void>
+}
+type ContactPropsType = {
+    contactTitle: string,
+    contactValue: string
+}
+type ProfileDataPropsType = {
+    profile: ProfileType,
+    isOwner: boolean
+    goToEditMode: () => void
 }

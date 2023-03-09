@@ -1,27 +1,26 @@
-import React, {lazy, Suspense} from "react";
+import React, {ComponentType, lazy, Suspense} from "react";
 import "./App.css";
-import {Navbar} from "./components/Navbar/Navbar";
-import {BrowserRouter, Route} from "react-router-dom";
-import {News} from "./components/News/News";
-import {Music} from "./components/Music/Music";
-import {Setting} from "./components/Setting/Setting";
-import {HeaderContainer} from "./components/Header/HeaderContainer";
-import {ContainerLogin} from "./Login/Login";
-import {UsersContainer} from "./components/Users/UsersContainer";
+import {BrowserRouter, Link, Route} from "react-router-dom";
 import {connect, Provider} from "react-redux";
 import {initializeAppTC} from "./redux/app-reducer";
 import {AppStateType, store} from "./redux/redux-store";
 import {Preloader} from "./components/common/Preloader/Preloader";
+import {compose} from "redux";
+import {LaptopOutlined, UserOutlined} from "@ant-design/icons";
+import {Breadcrumb, Layout, Menu} from "antd";
+import {UsersPage} from "./components/Users/UsersPage";
+import {News} from "./components/News/News";
+import {Music} from "./components/Music/Music";
+import {Setting} from "./components/Setting/Setting";
+import {LoginPage} from "./Login/LoginPage";
+import SubMenu from "antd/es/menu/SubMenu";
+import {AppHeader} from "./components/Header/Header";
 
-// import {DialogsContainer} from "./components/Dialogs/DialogsContainer";
-const DialogsContainer = lazy(() =>
-    import("./components/Dialogs/DialogsContainer")
-        .then(({DialogsContainer}) => ({default: DialogsContainer})));
+const DialogsContainer = lazy(() => import("./components/Dialogs/DialogsContainer"))
+// .then(({DialogsContainer}) => ({default: DialogsContainer})));
 
-// import {ProfileContainer} from "./components/Profile/ProfileContainer";
-const ProfileContainer = lazy(() =>
-    import("./components/Profile/ProfileContainer")
-        .then(({ProfileContainer}) => ({default: ProfileContainer})));
+const ProfileContainer = lazy(() => import("./components/Profile/ProfileContainer"))
+// .then(({ProfileContainer}) => ({default: ProfileContainer})));
 
 
 type AppPropsType = {
@@ -31,38 +30,66 @@ type AppPropsType = {
 
 class App extends React.Component<AppPropsType> {
     catchAllUnhandledErrors = (promiseRejectionEvent: PromiseRejectionEvent) => {
-        alert('some error occurred');
+        alert("some error occurred");
 
     }
+
     componentDidMount() {
         this.props.initializeApp()
-        window.addEventListener('unhandledrejection', this.catchAllUnhandledErrors)
+        window.addEventListener("unhandledrejection", this.catchAllUnhandledErrors)
     }
 
     componentWillUnmount() {
-        window.removeEventListener('unhandledrejection', this.catchAllUnhandledErrors)
+        window.removeEventListener("unhandledrejection", this.catchAllUnhandledErrors)
     }
 
     render() {
         if (!this.props.initialized) {
             return <Preloader/>
         }
+        const {Content, Footer, Sider} = Layout;
+
         return (
-            <div className={"app-wrapper"}>
-                <HeaderContainer/>
-                <Navbar/>
-                <div className={"app-wrapper-content"}>
-                    <Suspense fallback={<div><Preloader/></div>}>
-                        <Route path={"/dialogs"} render={() => <DialogsContainer/>}/>
-                        <Route path={"/profile/:userId?"} render={() => <ProfileContainer/>}/>
-                        <Route path={"/users"} render={() => <UsersContainer/>}/>
-                        <Route path={"/news"} render={() => <News/>}/>
-                        <Route path={"/music"} render={() => <Music/>}/>
-                        <Route path={"/setting"} render={() => <Setting/>}/>
-                        <Route path={"/login"} render={() => <ContainerLogin/>}/>
-                    </Suspense>
-                </div>
-            </div>
+            <Layout>
+                <AppHeader/>
+                <Content style={{padding: "0 50px"}}>
+                    <Breadcrumb style={{margin: "16px 0"}}>
+                        <Breadcrumb.Item>Home</Breadcrumb.Item>
+                        <Breadcrumb.Item>List</Breadcrumb.Item>
+                        <Breadcrumb.Item>App</Breadcrumb.Item>
+                    </Breadcrumb>
+                    <Layout style={{padding: "24px 0"}}>
+                        <Sider width={200}>
+                            <Menu
+                                mode="inline"
+                                defaultSelectedKeys={["1"]}
+                                // defaultOpenKeys={["sub1"]}
+                                style={{height: "100%"}}
+                            >
+                                <SubMenu key={'sub1'} icon={<UserOutlined/>} title={'My Profile'}>
+                                    <Menu.Item key={'1'}><Link to={'/profile'}>Profile</Link></Menu.Item>
+                                    <Menu.Item key={'2'}><Link to={'/dialogs'}>Messages</Link></Menu.Item>
+                                </SubMenu>
+                                <SubMenu key={'sub2'} icon={<LaptopOutlined/>} title={'Developers'}>
+                                    <Menu.Item key={'1'}><Link to={'/developers'}>Developers</Link></Menu.Item>
+                                </SubMenu>
+                            </Menu>
+                        </Sider>
+                        <Content style={{padding: "0 24px", minHeight: 280}}>
+                            <Suspense fallback={<div><Preloader/></div>}>
+                                <Route path={"/dialogs"} render={() => <DialogsContainer/>}/>
+                                <Route path={"/profile/:userId?"} render={() => <ProfileContainer/>}/>
+                                <Route path={"/developers"} render={() => <UsersPage pageTitle={"Samurai"}/>}/>
+                                <Route path={"/news"} render={() => <News/>}/>
+                                <Route path={"/music"} render={() => <Music/>}/>
+                                <Route path={"/setting"} render={() => <Setting/>}/>
+                                <Route path={"/login"} render={() => <LoginPage/>}/>
+                            </Suspense>
+                        </Content>
+                    </Layout>
+                </Content>
+                <Footer style={{textAlign: "center"}}>Ant Design ©2023 Created by Me</Footer>
+            </Layout>
         );
     }
 }
@@ -72,10 +99,7 @@ const mapStateToProps = (state: AppStateType) => ({
     initialized: state.app.initialized
 })
 
-let AppContainer = connect(mapStateToProps,
-    {
-        initializeApp: initializeAppTC,
-    })(App);
+let AppContainer = compose(connect(mapStateToProps, {initializeApp: initializeAppTC})(App)) as ComponentType;
 
 export const SamuraiJsApp = () => {
     return <BrowserRouter>
