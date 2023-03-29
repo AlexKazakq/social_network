@@ -19,10 +19,8 @@ type PropsType = RouteComponentProps<PathParamsType> & ProfileContainerPropsType
 export class ProfileAPIComponent extends React.Component<ProfileContainerPropsType & PropsType> {
 
     refreshProfile() {
-        debugger
         let userId: number | null = +this.props.match.params.userId
         if (!userId) {
-            debugger
             userId = this.props.authorizedUserId;
             if (!userId) {
                 this.props.history.push("/login")
@@ -33,12 +31,10 @@ export class ProfileAPIComponent extends React.Component<ProfileContainerPropsTy
     }
 
     componentDidMount() {
-        debugger
         this.refreshProfile()
     }
 
     componentDidUpdate(prevProps: Readonly<PropsType>, prevState: Readonly<PropsType>) {
-        debugger
         if (this.props.match.params.userId !== prevProps.match.params.userId) {
             this.refreshProfile()
         }
