@@ -55,6 +55,7 @@ const Messages: FC = () => {
     }
 
     useEffect(() => {
+        debugger
         if (isAutoScrollIsActive) {
             messagesAnchorRef.current?.scrollIntoView({behavior: 'smooth'})
         }
